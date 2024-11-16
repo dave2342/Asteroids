@@ -18,18 +18,25 @@ def main():
 	clock = pygame.time.Clock()
 	
 	#delta time variable
-	dt = 0
+	#dt = 0
 
 	player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)  
 	
 	#game loop
 	while True:
-		#process all events in game
+		#control the loop's speed to 60fps and calculate delta time (divide by 1000 to get milliseconds)
+		dt = clock.tick(60) / 1000  
+
+
+	#process all events in game
 		for event in pygame.event.get():
 			#if QUIT event(such as ctrl+c, or X in program screen, exit the game
 			if event.type == pygame.QUIT:
 				pygame.quit()
 				sys.exit()
+
+		#update game state
+		player.update(dt)
 
 		#clear screen and fill with black color
 		screen.fill("black")
@@ -39,9 +46,6 @@ def main():
 
 		#update the display
 		pygame.display.flip()
-
-	#control the loop's speed to 60fps and calculate delta time (divide by 1000 to get milliseconds)
-	dt = clock.tick(60) / 1000
 
 #ensures main is called only when this screen is directly executed
 if __name__ == "__main__":
