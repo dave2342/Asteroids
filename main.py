@@ -13,50 +13,37 @@ def main():
 	
 	#set up the game screen with height and width
 	screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-	
+	#create a clock object to manage screen updates                                                                        
+	clock = pygame.time.Clock() 	
+
 	#set groups
 	updatable = pygame.sprite.Group()
 	drawable = pygame.sprite.Group()
 	asteroids = pygame.sprite.Group()
 	shots = pygame.sprite.Group()
 
+	Asteroid.containers = (asteroids, updatable, drawable) 
 	Player.containers = (updatable, drawable)  
-	Asteroid.containers = (asteroids, updatable, drawable)
 	AsteroidField.containers = updatable
 	Shot.containers = (shots, updatable, drawable)
+
+	asteroid_field = AsteroidField()
 
 	#log info
 	print("Starting asteroids!")
 	print(f"Screen width: {SCREEN_WIDTH}")
 	print(f"Screen height: {SCREEN_HEIGHT}")
 	
-	#create a clock object to manage screen updates
-	clock = pygame.time.Clock()
-	
-	#delta time variable
-	#dt = 0
 
 	player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)  
-
-	# Create asteroids
-#	NUM_ASTEROIDS = 10   # Decide how many asteroids you want
-#	for _ in range(NUM_ASTEROIDS):
-		# Random position and radius
-#		x = random.randint(0, SCREEN_WIDTH)
-#		y = random.randint(0, SCREEN_HEIGHT)
-#		radius = random.randint(5, 20)  # Example range for radius
-
-#		asteroid = Asteroid(x, y, radius)
-#		asteroids.add(asteroid)
-
-
-	asteroid_field = AsteroidField()
+	
+	dt = 0
 
 	#game loop
 	while True:
 
 		#control the loop's speed to 60fps and calculate delta time (divide by 1000 to get milliseconds)
-		dt = clock.tick(60) / 1000
+#		dt = clock.tick(60) / 1000
 
 
 	#process all events in game
@@ -74,6 +61,10 @@ def main():
 			if player.collision(asteroid):
 				print("Game over!")
 				sys.exit()
+			for shot in shots:
+				if asteroid.collision(shot):
+					asteroid.split()
+					shot.kill()
 
 		#clear screen and fill with black color
 		screen.fill("black")
@@ -84,6 +75,8 @@ def main():
 
 		#update the display
 		pygame.display.flip()
+
+		dt = clock.tick(60) / 1000
 
 #ensures main is called only when this screen is directly executed
 if __name__ == "__main__":

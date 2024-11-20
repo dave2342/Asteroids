@@ -24,6 +24,7 @@ class Player(CircleShape):
 
 	def rotate(self, dt):
 		self.rotation += (PLAYER_TURN_SPEED * dt)
+		self.rotation = self.rotation % 360
 
 	def update(self, dt):
 		self.timer = max(0, self.timer -dt)
@@ -49,11 +50,15 @@ class Player(CircleShape):
 
 	def shoot(self):
 		if self.timer <= 0:
+#			print(f"Ship rotation: {self.rotation}")
+#			print(f"Initial velocity: {pygame.Vector2(0, -1)}")
 			shot = Shot(self.position.x, self.position.y)
 		#(0, 1) points down, y-axis flipped in comp graphics
 			velocity = pygame.Vector2(0, 1)
+#			print(f"Before rotation velocity: {velocity}")
 		# negative rotation because pygame rotation is clockwise, but we want counterclockwise to flip
-			velocity = velocity.rotate(-self.rotation)
+			velocity = velocity.rotate(self.rotation)
+#			print(f"after rotation velocity: {velocity}")
 			velocity *= PLAYER_SHOOT_SPEED
 			shot.velocity = velocity
 			self.timer = PLAYER_SHOOT_COOLDOWN
